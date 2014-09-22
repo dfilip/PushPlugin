@@ -58,6 +58,7 @@
 
     NSMutableDictionary* options = [command.arguments objectAtIndex:0];
 
+    UIUserNotificationType UserNotificationTypes = UIUserNotificationTypeNone;
     UIRemoteNotificationType notificationTypes = UIRemoteNotificationTypeNone;
     id badgeArg = [options objectForKey:@"badge"];
     id soundArg = [options objectForKey:@"sound"];
@@ -65,27 +66,42 @@
     
     if ([badgeArg isKindOfClass:[NSString class]])
     {
-        if ([badgeArg isEqualToString:@"true"])
+        if ([badgeArg isEqualToString:@"true"]){
             notificationTypes |= UIRemoteNotificationTypeBadge;
+            UserNotificationTypes |= UIUserNotificationTypeBadge;
+        }
     }
-    else if ([badgeArg boolValue])
+    else if ([badgeArg boolValue]){
         notificationTypes |= UIRemoteNotificationTypeBadge;
+        UserNotificationTypes |= UIUserNotificationTypeBadge;
+    }
     
     if ([soundArg isKindOfClass:[NSString class]])
     {
-        if ([soundArg isEqualToString:@"true"])
+        if ([soundArg isEqualToString:@"true"]){
             notificationTypes |= UIRemoteNotificationTypeSound;
+            UserNotificationTypes |= UIUserNotificationTypeSound;
+        }
     }
-    else if ([soundArg boolValue])
+    else if ([soundArg boolValue]){
         notificationTypes |= UIRemoteNotificationTypeSound;
+        UserNotificationTypes |= UIUserNotificationTypeSound;
+    }
     
     if ([alertArg isKindOfClass:[NSString class]])
     {
-        if ([alertArg isEqualToString:@"true"])
+        if ([alertArg isEqualToString:@"true"]){
             notificationTypes |= UIRemoteNotificationTypeAlert;
+            UserNotificationTypes |= UIUserNotificationTypeAlert;
+        }
     }
-    else if ([alertArg boolValue])
+    else if ([alertArg boolValue]){
         notificationTypes |= UIRemoteNotificationTypeAlert;
+        UserNotificationTypes |= UIUserNotificationTypeAlert;
+    }
+
+    notificationTypes |= UIRemoteNotificationTypeNewsstandContentAvailability;
+    UserNotificationTypes |= UIUserNotificationActivationModeBackground;
     
     self.callback = [options objectForKey:@"ecb"];
     NSLog(@"setting callback: %@",callback);
