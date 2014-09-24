@@ -136,20 +136,20 @@ function tokenHandler (result) {
 ```js
 // iOS
 function onNotificationAPN (event) {
-	if ( event.alert )
+	if ( event.aps.alert )
 	{
-		navigator.notification.alert(event.alert);
+		navigator.notification.alert(event.aps.alert);
 	}
 
-	if ( event.sound )
+	if ( event.aps.sound )
 	{
-		var snd = new Media(event.sound);
+		var snd = new Media(event.aps.sound);
 		snd.play();
 	}
 
-	if ( event.badge )
+	if ( event.aps.badge )
 	{
-		pushNotification.setApplicationIconBadgeNumber(successHandler, errorHandler, event.badge);
+		pushNotification.setApplicationIconBadgeNumber(successHandler, errorHandler, event.aps.badge);
 	}
 }
 
