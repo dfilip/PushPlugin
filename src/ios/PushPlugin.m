@@ -101,15 +101,15 @@
     if (notificationTypes == UIRemoteNotificationTypeNone)
         NSLog(@"PushPlugin.register: Push notification type is set to none");
 
-    #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
+    if ([[UIApplication sharedApplication]respondsToSelector:@selector(registerUserNotificationSettings:)]) {
 
         [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge) categories:nil]];
         [[UIApplication sharedApplication] registerForRemoteNotifications]; // you can also set here for local notification.
-    #else
+    }else{
 
         notificationTypes |= UIRemoteNotificationTypeNewsstandContentAvailability;
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:notificationTypes];
-    #endif
+    }
 
 	if (self.notificationMessage && self.callbackId)			// if there is a pending startup notification
 		[self notificationReceived];	// go ahead and process it
