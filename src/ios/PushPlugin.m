@@ -54,9 +54,11 @@
     
     
 	self.callbackId = command.callbackId;
+    NSLog(@"setting callbackId: %@",callbackId);
 
     NSMutableDictionary* options = [command.arguments objectAtIndex:0];
 
+    UIUserNotificationType UserNotificationTypes = UIUserNotificationTypeNone;
     UIRemoteNotificationType notificationTypes = UIRemoteNotificationTypeNone;
     id badgeArg = [options objectForKey:@"badge"];
     id soundArg = [options objectForKey:@"sound"];
@@ -64,50 +66,55 @@
     
     if ([badgeArg isKindOfClass:[NSString class]])
     {
-        if ([badgeArg isEqualToString:@"true"])
+        if ([badgeArg isEqualToString:@"true"]){
             notificationTypes |= UIRemoteNotificationTypeBadge;
+            UserNotificationTypes |= UIUserNotificationTypeBadge;
+        }
     }
-    else if ([badgeArg boolValue])
+    else if ([badgeArg boolValue]){
         notificationTypes |= UIRemoteNotificationTypeBadge;
+        UserNotificationTypes |= UIUserNotificationTypeBadge;
+    }
     
     if ([soundArg isKindOfClass:[NSString class]])
     {
-        if ([soundArg isEqualToString:@"true"])
+        if ([soundArg isEqualToString:@"true"]){
             notificationTypes |= UIRemoteNotificationTypeSound;
+            UserNotificationTypes |= UIUserNotificationTypeSound;
+        }
     }
-    else if ([soundArg boolValue])
+    else if ([soundArg boolValue]){
         notificationTypes |= UIRemoteNotificationTypeSound;
+        UserNotificationTypes |= UIUserNotificationTypeSound;
+    }
     
     if ([alertArg isKindOfClass:[NSString class]])
     {
-        if ([alertArg isEqualToString:@"true"])
+        if ([alertArg isEqualToString:@"true"]){
             notificationTypes |= UIRemoteNotificationTypeAlert;
+            UserNotificationTypes |= UIUserNotificationTypeAlert;
+        }
     }
-    else if ([alertArg boolValue])
+    else if ([alertArg boolValue]){
         notificationTypes |= UIRemoteNotificationTypeAlert;
-    
-    self.callback = [options objectForKey:@"ecb"];
+        UserNotificationTypes |= UIUserNotificationTypeAlert;
+    }
 
-    if (notificationTypes == UIRemoteNotificationTypeNone)
-        NSLog(@"PushPlugin.register: Push notification type is set to none");
-
-    
+    notificationTypes |= UIRemoteNotificationTypeNewsstandContentAvailability;
+    UserNotificationTypes |= UIUserNotificationActivationModeBackground;
     
     self.callback = [options objectForKey:@"ecb"];
     NSLog(@"setting callback: %@",callback);
 
-
-    isInline = NO;
     if (notificationTypes == UIRemoteNotificationTypeNone)
         NSLog(@"PushPlugin.register: Push notification type is set to none");
 
+    isInline = NO;
+
     #if __IPHONE_OS_VERSION_MAX_ALLOWED >= 80000
-        UserNotificationTypes |= UIUserNotificationActivationModeBackground;
         [[UIApplication sharedApplication] registerUserNotificationSettings:[UIUserNotificationSettings settingsForTypes:(UIRemoteNotificationTypeSound | UIRemoteNotificationTypeAlert | UIRemoteNotificationTypeBadge) categories:nil]];
         [[UIApplication sharedApplication] registerForRemoteNotifications]; // you can also set here for local notification.
     #else
-
-        notificationTypes |= UIRemoteNotificationTypeNewsstandContentAvailability;
         [[UIApplication sharedApplication] registerForRemoteNotificationTypes:notificationTypes];
     #endif
 
